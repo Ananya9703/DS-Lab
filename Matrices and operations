@@ -1,0 +1,194 @@
+import java.util.*;
+public class matrices{
+	//declare variables
+	int row, column;
+	int mat[][]=new int[5][5];
+
+	matrices(int rows,int columns) {//default constructor
+		this.row=rows;
+		this.column=columns;
+	}
+	
+	public void accept() {//accept matrices
+		
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter elements of matrix:");
+		for(int i=0;i<row;i++) {
+			for(int j=0;j<column;j++) {
+				//accepting elements
+				mat[i][j]=sc.nextInt();
+			}
+		}
+	}
+
+	public void display() {// display of the matrices that were accepted
+		
+		System.out.println("Display matrix:");
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < column; j++) {
+				// display matrix
+				System.out.print(" "+mat[i][j]);
+			}
+			System.out.println(); 
+		}
+	}
+	
+	public void square() {// checking if a matrix is square or not
+
+		if (row == column) {//condition for square matrix
+			System.out.println("Matrix is a square matrix.");
+		} else {
+			System.out.println("Matrix1 isn't a square matrix.");
+		}
+	}
+	
+	public void uppertriangular() {// checking if a matrix is upper triangular or not
+
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < i; j++) {
+				if (mat[i][j] != 0) {//condition for upper triangular matrices
+					System.out.println("matrix isn't upper triangular.");
+					break;
+				} else
+					System.out.println("matrix 1 is upper triangular.");
+			}
+		}
+
+	}
+	
+	public void add(matrices mat1, matrices mat2) {// computing addition of matrix 1 and 2 stored in matrix 3
+		// matrix to store addition
+		matrices mat3 = new matrices(row, column);
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < column; j++) {
+				// addition
+				mat3.mat[i][j] = mat1.mat[i][j] + mat2.mat[i][j];
+				System.out.print(" "+mat3.mat[i][j]);
+			}
+			System.out.println();
+		}
+	}
+
+	public void multiplication(matrices mat1, matrices mat2) {
+		// computing multiplication of matrix 1 and 2 that gives new matrix 3
+
+		matrices mat4 = new matrices(row, column);
+
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < column; j++) {
+				for (int k = 0; k < column; k++) {
+					//multiplication of matrices
+					mat4.mat[i][j] += mat1.mat[i][j] * mat2.mat[i][j];
+				}
+				System.out.print(" "+mat4.mat[i][j] );
+			}
+			System.out.println();
+		}
+	}
+
+	public void transpose() {// computing transpose of both matrices
+
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < column; j++) {
+				//transpose calculation
+				System.out.print(mat[j][i] + "\t");
+			}
+			System.out.println();
+		}
+	}
+	public class Assign1{//main class
+		public static void main(String args[]) {
+			Scanner sc =  new Scanner(System.in);
+			//input variables
+			int choice;
+			int row1, column1;
+			int row2, column2;
+			
+			//matrix1
+			System.out.println("Enter number of rows and columns for matrix 1: ");
+			System.out.println("Enter rows of matrix 1: ");
+			row1=sc.nextInt();
+			System.out.println("Enter columns of matrix1: ");
+			column1=sc.nextInt();
+			matrices matrix1=new matrices(row1,column1);
+			//creation and display
+			matrix1.accept();
+			matrix1.display();
+			
+			//matrix 2
+			System.out.println("Enter number of rows and columns for matrix 2: ");
+			System.out.println("Enter rows of matrix 2: ");
+			row2=sc.nextInt();
+			System.out.println("Enter columns of matrix 2: ");
+			column2=sc.nextInt();
+			matrices matrix2=new matrices(row2,column2);
+			//creation and display
+			matrix2.accept();
+			matrix2.display();
+			
+			do {//Menu is assigned
+				System.out.println("---MENU---");
+				System.out.println("1.Check if matrix is square");
+				System.out.println("2.Check if matrix is upper triangular");
+				System.out.println("3.Compute transpose");
+				System.out.println("4.Add 2 matrices");
+				System.out.println("5.Multiply 2 matrices");
+				System.out.println("6.Exit");
+				System.out.println("Input choice");
+				choice=sc.nextInt();
+				switch(choice) {//switch case
+				//menu options
+				case 1:
+					System.out.println("Option 1 is chosen:");
+					System.out.println("For matrix 1:");
+					//calling function
+					matrix1.square();
+					System.out.println("For matrix 2:");
+					matrix2.square();
+					break;
+				case 2:
+					System.out.println("Option 2 is chosen:");
+					System.out.println("For matrix 1:");
+					if (row1 == column1) {//checking if matrix is square
+						matrix1.uppertriangular();
+					}
+                    
+					System.out.println("For matrix 2:");
+					if (row2 == column2) {//checking if matrix is square
+						matrix2.uppertriangular();
+					}
+					break;
+				case 3:
+					System.out.println("Option 3 is chosen:");
+					System.out.println("Transpose of matrix 1: ");
+					//function call
+					matrix1.transpose();
+					System.out.println("Transpose of matrix 2: ");
+					matrix2.transpose();
+					break;
+				case 4:
+					System.out.println("Option 4 is chosen:");
+					if(row1==column1 && row2==column2) {//checking if matrix is square
+						System.out.println("Addition of two matrices: ");
+						matrix1.add(matrix1, matrix2);
+					}
+					else
+						System.out.println("As matrices aren't square, addition isn't possible.");
+					break;
+				case 5:
+					System.out.println("Option 5 is chosen:");
+					if(matrix1.column==matrix2.row) {//checking if matrices can be multiplied
+						matrix2.multiplication(matrix1, matrix2);
+					}
+					break;
+				case 6:
+					//exit option
+					System.exit(6);
+				default: System.out.println("Invalid Choice");
+				}
+			}while(choice!=6);
+			sc.close();//if none of the options are chosen
+		}
+	}
+}
+
