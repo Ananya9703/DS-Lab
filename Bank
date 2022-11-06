@@ -1,0 +1,237 @@
+import java.util.*;
+
+	//node of single linked list
+	class Account_node
+	{
+		int Accno;
+		String Name;
+		Float Bal;
+		Account_node next;
+		
+		//parameterized constructor
+		public Account_node(int accno, String name, Float bal) {
+			this.Accno=accno;
+			this.Name=name;
+			this.Bal=bal;
+			next=null;
+		}
+	}
+	public class Bank {
+		Scanner sc = new Scanner(System.in);
+		//head and temporary node (global var) of single linked list
+		Account_node head;
+		Account_node temp;
+		int accno1;
+		int i;
+		//function to create linked list
+		void create(int accno, String name, Float bal) {
+			System.out.println("Input number of customers:");
+			accno1=sc.nextInt();
+			
+			for(i=0;i<accno1;i++) {//iterating for every customer
+				System.out.println("Input account number of customer: ");
+				accno=sc.nextInt();
+				sc.nextLine();
+				System.out.println("Input name of customer: ");
+				name=sc.nextLine();
+				System.out.println("Input balance of customer: ");
+				bal=sc.nextFloat();
+				Account_node curr=new Account_node(accno,name,bal);
+				if(head==null) {//if there are no elements in the list
+					head= curr;
+				}
+				else {//using a temp node to traverse the list 
+					temp=head;
+					while(temp.next!=null) //until next of temp is not null
+						temp=temp.next;
+				
+				curr.next=temp.next; //creating a node at the end
+				temp.next=curr;
+				}
+			}
+		}
+		
+		void displayone() {//displayone function to print the details of a single account
+			temp=head;
+			System.out.println("Enter account number to display: ");
+			int accno=sc.nextInt();
+			while(temp!=null && temp.Accno!=accno)//while loop to reach the node containing the required account number
+			temp=temp.next;
+			if(temp!=null) {//printing the details if the account is found
+			System.out.println("Account number: "+temp.Accno+"\nName: "+temp.Name);
+			System.out.println("Balance: "+temp.Bal+"\n");
+			}
+			else//exception case-account not found
+			System.out.println("Account not found");
+			}
+		
+		void displayall() {//display all account details
+			temp = head;
+			System.out.println("Account details: ");
+			while(temp!=null) {
+				System.out.println("Account number: "+temp.Accno);
+				System.out.println("Name of customer: "+temp.Name);
+				System.out.println("Current Balance: "+temp.Bal);
+				temp=temp.next; //traversal of the list from head to tail
+			}
+		}
+		
+		void insert(int accno, String name, Float bal) {//function to insert account in list
+			System.out.println("Input account number of customer: ");
+			accno=sc.nextInt();
+			sc.nextLine();
+			System.out.println("Input name of customer: ");
+			name=sc.nextLine();
+			System.out.println("Input balance of customer: ");
+			bal=sc.nextFloat();
+			Account_node curr=new Account_node(accno,name,bal);//new node to be inserted is created
+			
+			//switch case for different ways of inserting node 
+			System.out.println("1. Add account first: ");
+			System.out.println("2. Add account last: ");
+			System.out.println("3. Add account at a certain position: ");
+			int choice=sc.nextInt();
+			switch(choice) {
+			case 1:
+				curr.next=head; // insert new node in the beginning
+				head=curr; // new node is head now
+				accno1++; // increase in size of linked list
+				break;
+			
+			case 2:
+				temp=head; // start traversal of list
+				while(temp.next!=null) {
+					temp=temp.next; // traversal till the end
+				}
+				temp.next=curr; // insert new node at the end
+				accno1++; // increase in size of linked list
+				break;
+				
+			case 3:
+				System.out.println("Enter account number after which account is to be added: ");
+				int acc1=sc.nextInt();
+				temp=head;
+				while(temp.Accno!=acc1) { // traversal of list until temp node's
+				//account no is not equal to account no after which node is to be inserted
+					temp=temp.next; 
+				}
+				curr.next=temp.next; // insert new node after account numbers are equated
+				temp.next=curr;
+				System.out.println("New account is created!");
+				accno1++;
+				break;
+				}
+		}
+		
+		void delete(int accno) {//function to delete account in list
+			//switch case for deleting node from different positions
+			System.out.println("1. Delete first account: ");
+			System.out.println("2. Delete last account: ");
+			System.out.println("3. Delete account at a certain position: ");
+			int choice=sc.nextInt();
+			switch(choice) {
+			case 1: 
+				temp=head.next; // temp node is the second node
+				head.next=null; // deleting head from list by linking head to null
+				head=temp; //head is temp
+				accno1--; //decrease in size
+				break;
+			case 2:
+				temp=head; //temp is head
+				while(temp.next.next!=null) {
+					temp=temp.next; //traversal of list till 2nd last element
+				}
+				temp.next=null; //deleting last node by making link of 2nd last element to 0
+				accno1--;
+				break;
+			case 3:
+				
+				System.out.println("Enter account number after which account is to be added: ");
+				int acc1=sc.nextInt();
+				Account_node temp1=head, temp2=head; //using two reference nodes and setting them as head
+				for (int i=1;i<acc1;i++) {
+					temp1=temp1.next; //traversing 
+				}
+				for( int i=1;i<acc1+2;i++) {
+					temp2=temp2.next;
+					}
+				temp1.next=temp2;
+				accno1--; //decreasing size
+				break;
+			}
+		}
+		
+		void deposit() {//function to deposit money
+			System.out.println("Input account number in which money is to be deposited:");
+			int acc1=sc.nextInt();
+			temp=head; //temp node is assigned head
+			while(temp.Accno!=acc1) {
+				temp=temp.next; //traversal of node until the required account no is reached
+			}
+			System.out.println("Input amount to be deposited: ");
+			int deposit=sc.nextInt();
+			temp.Bal=temp.Bal+deposit;// increase in balance as amount is deposited
+			System.out.println("Amount has been deposited !");
+			System.out.println("Balance is : "+temp.Bal);
+		}
+		
+		void withdraw() {// function to withdraw money
+			System.out.println("Input account number in which money is to be withdrawn:");
+			int acc1=sc.nextInt();
+			temp=head;
+			while(temp.Accno!=acc1) {
+				temp=temp.next; //traversal of node until the required account no is reached
+			}
+			System.out.println("Input amount to be withdrawn: ");
+			int withdraw=sc.nextInt();
+			if((temp.Bal-withdraw)>=1000) { //minimum limit condition
+				temp.Bal=temp.Bal-withdraw; //updating balance after amount withdrawal
+				System.out.println("Amount has been withdrawn !");
+				System.out.println("Balance is : "+temp.Bal);
+			}
+			else
+				System.out.println("Amount can't be withdrawn as minimum balance limit has been crossed.");
+		}
+		public static void main(String args[]) {//main function
+			Scanner sc = new Scanner(System.in);
+			Bank obj=new Bank(); //object creation to call functions
+			int accno,bal=0;
+			int choice,n=0;
+			String name,addr=null;
+			obj.create(0, null, null);
+			obj.displayall();
+			System.out.println("---MENU---");
+			do {
+			System.out.println("1.Add a new account: ");
+			System.out.println("2.Delete an account: ");
+			System.out.println("3.Deposit money into an account: ");
+			System.out.println("4.Withdraw money from an account: ");
+			System.out.println("5.Exit");
+			System.out.println("Input choice");
+			choice=sc.nextInt();
+			switch(choice) {
+			case 1:
+				obj.insert(0, null, null);
+				obj.displayall();
+				break;
+			case 2:
+				obj.delete(0);
+				obj.displayall();
+				break;
+			case 3:
+				obj.deposit();
+				obj.displayone();
+				break;
+			case 4:
+				obj.withdraw();
+				obj.displayone();
+				break;
+			case 5:
+				System.exit(5);
+			default:
+				System.out.println("Incorrect choice");
+				}
+			}while(choice!=5);
+			sc.close();
+			}
+		}
