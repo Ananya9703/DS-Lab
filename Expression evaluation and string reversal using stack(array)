@@ -1,0 +1,129 @@
+import java.util.*;
+public class Stack {//stack class created
+	int maxsize;
+	char[] stk;
+	int top;
+	int r=0;
+	Stack(int s){//parameterised constructor to initialise variables
+		maxsize=s;
+		stk=new char[maxsize];
+		top=-1;
+	}
+	boolean isfull() {//check if stack is full
+		//condition for full stack
+		if(top==maxsize-1)
+			return true;
+		else
+			return false;
+	}
+	boolean isempty() {//check if stack is empty
+		//condition for empty stack
+		if (top==-1)
+			return true;
+		else
+			return false;
+	}
+	void push(char element) {
+		if(isfull())
+			//stack overflow
+			System.out.println("stack is full");
+		else {
+			//push element
+			top++;
+			stk[top]=element;
+		}
+	}
+	int pop() {
+		if(isempty()) {
+			//stack underflow
+			System.out.println("stack is empty");
+			return 0;
+		}
+		else {
+			//pop element
+			int element=stk[top];
+			top--;
+			return element;
+		}
+	}
+	void evaluate(String exp) {
+		for(int i=0;i<maxsize;i++) {
+			//character at ith index of exp string
+			char c=exp.charAt(i);
+			//char is pushed on stack if it is a operand
+			if(Character.isDigit(c)) {
+				push(c);
+			}
+			else {//if its an operator
+				int op2=pop()-'0';
+				int op1=pop()-'0';
+				//null case condition
+				if(op1!=0 && op2!=0) {
+					switch(c) {//switch case for diff operators
+					case '+':
+						push((char)(op1+op2+'0'));
+					break;
+					case '-':
+						push((char)(op1-op2+'0'));
+					break;
+					case '*':
+						push((char)(op1*op2+'0'));
+					break;
+					case '/':
+						push((char)(op1/op2+'0'));
+					break;
+					default:System.out.println("Wrong operator");
+					}
+				}
+			}
+			
+		}int ans=pop()-'0';
+		System.out.println("value of expression: "+ans);
+	}
+	void reverse(String str) {
+		for(int i=0;i<maxsize;i++) {
+			//char at ith index of str string is pushed on stack
+			char ch=str.charAt(i);
+			push(ch);
+		}
+		for(int i=0;i<maxsize;i++) {
+			//all stack characters are popped
+			System.out.print((char)pop());
+		}
+	}
+	public static void main(String args[]) {
+		Scanner sc = new Scanner(System.in);
+		int choice=0;
+		System.out.println("****MENU****");
+		do {
+			
+			System.out.println("\n1. Evaluating postfix expression");
+			System.out.println("2. Reverse a string expression");
+			System.out.println("3. Exit");
+			System.out.println("Enter choice");
+			choice=sc.nextInt();
+			sc.nextLine();
+			switch(choice) {
+			case 1:
+				System.out.println("You have chosen option 1");
+				System.out.println("Enter postfix expression: ");
+				String exp=sc.nextLine();
+				Stack obj1=new Stack(exp.length());
+				obj1.evaluate(exp);
+				break;
+			case 2:
+				System.out.println("You have chosen option 2");
+				System.out.println("Enter string to be reversed: ");
+				String str=sc.nextLine();
+				Stack obj2=new Stack(str.length());
+				obj2.reverse(str);
+				break;
+			case 3:
+				System.exit(3);
+			default:System.out.println("Incorrect choice");	
+			}
+		}while(choice!=3);
+		sc.close();
+	}
+	
+}
