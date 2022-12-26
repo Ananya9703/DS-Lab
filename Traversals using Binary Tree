@@ -1,0 +1,250 @@
+import java.util.*;
+
+//Node class created to store pointers and data
+class Node {
+	Node left, right;
+	int data;
+
+	public Node(int data) {// parameterized constructor that initializes 
+						   // left right and data
+		left = null;
+		right = null;
+		this.data = data;
+	}
+}
+//Tree class created that stores root and other functions
+class Tree {
+	Node root;
+	Scanner sc = new Scanner(System.in);
+
+	public Tree() {//parameterized constructor that initializes root
+		root = null;
+	}
+
+	void create() {//method to create a binary tree
+		int flag = 1;
+		//new nodes created for traversal and assignment
+		Node ptr;
+		Node temp = null;
+		do {
+			if (root == null) {//entering data at root node of tree
+				System.out.println("Enter data to be added at root:");
+				int d = sc.nextInt();
+				temp = new Node(d);
+				this.root = temp;
+			}
+			else {//in case root already exists
+				ptr = root;
+				while (ptr != null) {
+					System.out.println("Enter which direction node is to be inserted:");
+					String dir = sc.next();
+					if (dir.equals("left")) {
+						if (ptr.left == null) {
+							System.out.println("Adding data to the left of " + ptr.data + ".Enter data: ");
+							int d = sc.nextInt();
+							temp = new Node(d);
+							ptr.left = temp;
+							// d is now added to left of ptr.data
+							break;
+						}
+						ptr = ptr.left; // as left position is already occupied
+						// pointer is now at ptr.data
+					}
+
+					else if (dir.equals("right")) {
+						if (ptr.right == null) {
+							System.out.println("Adding data to the right of " + ptr.data + ".Enter data: ");
+							int d = sc.nextInt();
+							temp = new Node(d);
+							ptr.right = temp;
+							// d is now added to right of ptr.data
+							break;
+						}
+						ptr = ptr.right;// as right position is already occupied
+						// pointer is now at ptr.data
+					} else {
+						System.out.println("Invalid choice");
+						break;
+					}
+
+				}
+
+			}
+			System.out.println("Do you want to continue printing nodes ?");
+			//entering 1 if yes and 0 if not
+			flag = sc.nextInt();
+
+		} while (flag == 1);
+		System.out.println("Binary tree is created.");
+	}
+
+	void inorder_nonrec() {
+		if (root == null) {
+			System.out.println("Tree is empty");
+		}
+		System.out.println("Non-recursive inorder traversal: ");
+		//creating a stack of node addresses
+		Stack<Node> s = new Stack<Node>();
+		Node ptr = root;
+		//while ptr is not null and stack is not empty, traversal takes place
+		while (ptr != null || s.size() > 0) {
+			while (ptr != null) {
+				s.push(ptr);
+				ptr = ptr.left;
+			}
+			ptr = s.pop();
+			System.out.print(ptr.data + " ");
+			ptr = ptr.right;
+		}
+	}
+
+	void preorder_nonrec() {
+		if (root == null) {
+			System.out.println("Tree is empty");
+		}
+		System.out.println("Non-recursive preorder traversal: ");
+		//creating a stack of node addresses
+		Stack<Node> s = new Stack<Node>();
+		Node ptr = root;
+		s.push(ptr);
+		while (!s.isEmpty()) {
+			ptr = s.peek();
+			System.out.print(ptr.data + " ");
+			ptr = s.pop();
+			if (ptr.right != null) {
+				s.push(ptr.right);
+			}
+			if (ptr.left != null) {
+				s.push(ptr.left);
+			}
+		}
+	}
+
+	void postorder_nonrec(Node n2) {
+		if (root == null) {
+			System.out.println("Tree is empty");
+		}
+		System.out.println("Non-recursive postorder traversal: ");
+		//creating a stack of node addresses
+		Stack<Node> s = new Stack<Node>();
+		//using a flag to keep a check on conditions
+		boolean check = true;
+		while (true) {
+			while (n2 != null && check) {
+				s.push(n2);
+				n2 = n2.left;
+			}
+			if (s.empty())
+				break;
+
+			if (n2 != s.peek().right) {
+				n2 = s.peek().right;
+				check = true;
+				continue;
+			}
+			n2 = s.pop();
+			System.out.print(n2.data + " ");
+			check = false;
+		}
+	}
+
+	void inorder_rec(Node n1) {
+		if (root == null) {
+			System.out.println("Tree is empty");
+		} else {
+			if (n1 == root) {//when root exists in tree similar to the parameter
+				System.out.println("Recursive inorder traversal: ");
+			}
+			if (n1 != null) {//when root is not empty,traversal takes place
+				inorder_rec(n1.left);
+				System.out.print(n1.data + " ");
+				inorder_rec(n1.right);
+			}
+		}
+
+	}
+
+	void preorder_rec(Node n1) {
+		if (root == null) {
+			System.out.println("Tree is empty");
+		} else {
+			if (n1 == root) {//when root exists in tree similar to the parameter
+				System.out.println("Recursive preorder traversal: ");
+			}
+			if (n1 != null) {//when root is not empty,traversal takes place
+				System.out.print(n1.data + " ");
+				preorder_rec(n1.left);
+				preorder_rec(n1.right);
+			}
+		}
+
+	}
+
+	void postorder_rec(Node n1) {
+		if (root == null) {
+			System.out.println("Tree is empty");
+		} else {
+			if (n1 == root) {//when root exists in tree similar to the parameter
+				System.out.println("Recursive postorder traversal: ");
+			}
+			if (n1 != null) {//when root is not empty,traversal takes place
+				postorder_rec(n1.left);
+				postorder_rec(n1.right);
+				System.out.print(n1.data + " ");
+			}
+		}
+
+	}
+
+}
+
+public class BinaryTree {//main class
+	public static void main(String args[]) {
+		//object creation
+		Tree bt = new Tree();
+		Scanner sc = new Scanner(System.in);
+		int x = 1;
+		while (x == 1) {//different types of traversal shown through a menu driven program
+			System.out.println("\nMENU");
+			System.out.println("1.Create binary tree");
+			System.out.println("2.Non recursive inorder");
+			System.out.println("3.Non recursive preorder");
+			System.out.println("4.Non recursive postorder");
+			System.out.println("5.Recursive inorder");
+			System.out.println("6.Recursive preorder");
+			System.out.println("7.Recursive postorder");
+			System.out.println("8.Exit");
+			System.out.println("Enter choice:");
+			int choice = sc.nextInt();
+			switch (choice) {//switch case
+			case 1:
+				bt.create();
+				break;
+			case 2:
+				bt.inorder_nonrec();
+				break;
+			case 3:
+				bt.preorder_nonrec();
+				break;
+			case 4:
+				bt.postorder_nonrec(bt.root);
+				break;
+			case 5:
+				bt.inorder_rec(bt.root);
+				break;
+			case 6:
+				bt.preorder_rec(bt.root);
+				break;
+			case 7:
+				bt.postorder_rec(bt.root);
+				break;
+			case 8:
+				System.exit(0);
+				break;
+			default:
+				System.out.println("invalid choice");
+
+			}
+		}sc.close();
+	}
+}
