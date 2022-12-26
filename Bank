@@ -1,6 +1,6 @@
 import java.util.*;
 
-	//node of single linked list
+	//node of single linked list to define and initialise variables
 	class Account_node
 	{
 		int Accno;
