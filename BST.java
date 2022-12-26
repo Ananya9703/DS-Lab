@@ -1,6 +1,3 @@
-/*Ananya Bhat
- * UCE2021602
- * To implement Binary Search Tree and perform operations on it.*/
 
 import java.util.*;
 
