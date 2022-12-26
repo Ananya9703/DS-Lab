@@ -1,0 +1,192 @@
+import java.util.*;
+class node{//Node class
+	int data;
+	node next;
+
+	public node(int data) {//parameterized constructor
+		this.data=data;
+		this.next=null;
+	}
+}
+class Graph {//main class
+	Scanner sc=new Scanner(System.in);
+	//number of houses and lanes (vertices and edges respectively)
+	static int house=0;
+	static int lane=0;
+	//initialize matrix
+	int adjmat[][];
+	//initialize array of lists
+	node head[]=new node[10];
+
+	void createusingAdjMat() {
+		//create matrix representation of graph
+		adjmat=new int[house][house];
+		for(int i=0;i<house;i++) {
+			for(int j=0;j<house;j++) {
+				adjmat[i][j]=0;
+			}
+		}
+
+		for(int i=0;i<lane;i++) {
+			//accept edges of graph
+			System.out.println("The starting vertex: ");
+			int u=sc.nextInt();
+			System.out.println("The ending vertex: ");
+			int v=sc.nextInt();
+			adjmat[u][v]=1;
+			adjmat[v][u]=1;//if it is undirected graph
+		}
+	}
+
+	void displayAdjMat() {//displaying matrix
+		System.out.println("Adjacency Matrix: ");
+		for(int i=0;i<house;i++) {
+			for(int j=0;j<house;j++) {
+				System.out.print(adjmat[i][j]+"\t");
+			}
+			System.out.println(" ");
+		}
+	}
+
+	void createusingAdjList(){
+		//creating adjacency list representation of graph
+		for(int i=0;i<lane;i++) {
+			//accept edges of the graph
+			System.out.println("The starting vertex: ");
+			int u=sc.nextInt();
+			System.out.println("The ending vertex: ");
+			int v=sc.nextInt();
+			//array of lists 
+			insert(u,v);
+			insert(v,u); //if it is undirected graph
+		}
+	}
+
+	public void insert(int u, int v) {		
+		node y=new node(v);
+		//inserting node at head
+		if(head[u]==null) {
+			head[u]=y;
+		}
+
+		else {//inserting new nodes at the end of list in array
+			node temp=head[u];
+			while(temp.next!=null) {
+				temp=temp.next;
+			}
+			temp.next=y;
+		}
+
+	} 
+	void displayAdjList() {//displaying list
+		System.out.println("Adjacency list: ");
+		for(int i=0;i<house;i++) {
+			node temp=head[i];
+			System.out.print(i + " ");
+			while(temp!=null) {
+				System.out.print("--->" + temp.data);
+				temp=temp.next;
+			}
+			System.out.println();
+		}
+	}
+	
+	void bfs() {
+		System.out.println("BFS Traversal:");
+		System.out.println("Enter source vertex:");
+		int sv=sc.nextInt();
+		//creating an array of unvisited vertexes
+		int[] visited=new int[house];
+		//all vertexes are unvisited initially
+		for(int i=0;i<house;i++) {
+			visited[i]=0;
+		}
+		//Queue of integers implemented through linked list
+		Queue<Integer> q =new LinkedList<>();
+		//inserting starting vertex in queue
+		q.add(sv);
+		//mark said vertex as visited in queue
+		visited[sv]=1;
+		System.out.print(sv+" ");
+		
+		while(q.size()>0) {
+			//until queue is not empty
+			//pop element from queue and store in node 
+			int tempindex=q.remove();
+			node curr=head[tempindex];
+			while(curr!=null) {
+				//inserting all adjacent unvisited vertices of sv into queue
+				if(visited[curr.data]!=1) {
+					q.add(curr.data);
+					//marking them as visited
+					visited[curr.data]=1;
+					System.out.print(curr.data+" ");
+				}
+				curr=curr.next;//traversal to next list
+			}
+		}
+	}
+	void dfs() {
+		System.out.println("DFS Traversal:");
+		System.out.println("Enter source vertex");
+		int sv=sc.nextInt();
+		//creating a stack of integers 
+		Stack<Integer> st=new Stack<Integer>();
+		//array of lists
+		int visited []=new int[house];
+		//mark all vertex as unvisited initially
+		for(int i=0;i<house;i++) {
+			visited[i]=0;
+		}
+		//after source vertex is pushed, vertex is visted
+		visited[sv]=1;
+		st.push(sv);
+		//while stack isn't empty
+		while(st.size()>0) {
+			//pop the element if there is no unvisited vertex adjacent to v
+			int a =st.pop();
+			System.out.print(" "+a);
+			for(int i=0;i<house;i++) {
+				//for unvisited adjacent matrices
+				if(adjmat[a][i]==1 && visited[i]==0) {
+					st.push(i);
+					visited[i]=1;
+				}
+			}
+		}
+	}
+
+	public static void main(String args[]) {//driver code
+		Scanner sc=new Scanner(System.in);
+		//object creation
+		Graph g=new Graph();
+		int ch;
+		System.out.println("Enter number of houses: ");
+		house=sc.nextInt();
+		System.out.println("Enter number of lanes: ");
+		lane=sc.nextInt();
+		do {//menu
+			System.out.println("\nOPTIONS");
+			System.out.println("1. DFS using adjacency matrix");
+			System.out.println("2. BFS using adjacency list");
+			System.out.println("3. Exit");
+			ch=sc.nextInt();
+
+			switch(ch) {//switch case
+			case 1:
+				g.createusingAdjMat();
+				g.displayAdjMat();
+				g.dfs();
+				break;
+			case 2:
+				g.createusingAdjList();
+				g.displayAdjList();
+				g.bfs();
+				break;
+			case 3:
+				System.exit(0);
+			}
+		}while(ch!=3);
+		sc.close();
+	}
+}
