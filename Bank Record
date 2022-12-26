@@ -1,0 +1,158 @@
+import java.util.*;
+
+class Customer{//class(node) creation to define variables
+	int id;
+	String name;
+	Double balance;
+	
+	//parameterized constructor to initialize instance variables 
+	public Customer(int id, String name, Double balance) {
+		this.id=id;
+		this.name=name;
+		this.balance=balance;
+	}
+}
+
+class Table{//Table class to initialize methods and variables
+	Scanner sc=new Scanner(System.in);
+	int size;//size of hashtable
+	int hashval;//variable to use for linear probing
+	Customer hasharray[];//array holding hash values
+	boolean flag;
+	
+	Table(int size){//parameterized constructor
+		this.size=size;
+		hasharray=new Customer[size];
+	}
+	
+	boolean isFull() {//full table condition
+		flag=true;
+		for(int i=0;i<size;i++) {
+			if(hasharray[i]==null) {
+				flag=false;
+				break;
+			}
+		}
+		return flag;
+	}
+	int hashval_fun(int id) {//linear probing function
+		return (id%size);
+	}
+	void create() {//function to create table 
+		int o;
+		do {
+			insert();
+			System.out.println("Enter 1 to continue");
+			o=sc.nextInt();
+		}while(o==1);
+		}
+	void insert() {//function to insert entries into table
+		int count=0;
+		if(isFull()) {//no entries can be input if table is empty
+			System.out.println("The table is full");
+		}
+		else {//input entries
+			System.out.println("Enter customer id:");
+			int id=sc.nextInt();
+			System.out.println("Enter customer name:");
+			String name=sc.next();
+			System.out.println("Enter balance: ");
+			double bal=sc.nextDouble();
+			//new node created to enter data 
+			Customer newnode=new Customer(id,name,bal);
+			//linear probe to insert data at the appropriate slot
+			hashval=hashval_fun(id);
+			while(hasharray[hashval]!=null) {
+				count++;
+				hashval=(hashval+count)%size;
+			}
+			hasharray[hashval]=newnode;
+		}
+	}
+	void display() {//function to display hash table
+		for(int i=0;i<size;i++) {
+			System.out.println("**Customer"+i+"**");
+			if(hasharray[i]==null) {
+				System.out.println("Empty Slot");
+			}
+			else if(hasharray[i]!=null) {
+				System.out.println("Customer id:"+hasharray[i].id);
+				System.out.println("Customer name:"+hasharray[i].name);
+			}
+		}
+	}
+	
+	int search() {//function to search for a particular id
+		flag=false;
+		System.out.println("Enter customer id : ");
+		int id_search=sc.nextInt();
+		//linear probe to search for said id from the slots
+		hashval=hashval_fun(id_search);
+		while(hasharray[hashval]!=null) {
+			if(hasharray[hashval].id==id_search) {
+				flag=true;
+				System.out.println("Id is found");
+				System.out.println("Customer name:"+hasharray[hashval].name);
+				System.out.println("Balance left:"+hasharray[hashval].balance);
+				break;
+		}
+			//rehashing
+			hashval=(hashval+1)%size;
+	}
+		if(flag==false) {
+			System.out.println("Customer is not found");
+			return 0;
+		}
+		return hashval;
+	
+}
+	
+	void delete() {//function to delete a particular record
+		hashval=search();
+		if(hashval!=-1) {
+			hasharray[hashval]=null;
+			System.out.println("Customer record is deleted");
+		}
+	}
+}
+public class Hash {//main class
+	public static void main(String args[]) {
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter hashtable size:");
+		int size=sc.nextInt();
+		Table t = new Table(size);
+		int choice;
+		t.create();
+		t.display();
+		do {//menu options
+			System.out.println("\n MENU");
+			System.out.println("1. INSERT");
+			System.out.println("2. DISPLAY");
+			System.out.println("3. SEARCH");
+			System.out.println("4. DELETE");
+			System.out.println("5. EXIT");
+			System.out.println("ENTER MENU OPTION:");
+			choice=sc.nextInt();
+			switch(choice) {//switch case
+			case 1:
+				t.insert();
+				break;
+			case 2:
+				t.display();
+				break;
+			case 3:
+				t.search();
+				break;
+			case 4:
+				t.delete();
+				break;
+			case 5:
+				System.out.println("Thank you !");
+				break;
+			default:
+				System.out.println("INVALID OPTION");
+			}
+		}while(choice!=5);
+		sc.close();
+		}
+}
